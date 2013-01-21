@@ -1,5 +1,5 @@
 <?php
-# (c)2010,2011 Christopher Gutteridge / University of Southampton
+# (c)2010,2011,2012 Christopher Gutteridge / University of Southampton
 # some extra features and bugfixes by Bart Nagel
 # License: LGPL
 # Version 1.5
@@ -60,6 +60,7 @@ class Graphite
 		$this->loaded = array();
 		$this->debug = false;
 		$this->arc2config = null;
+		$this->lang = "en";
 
 		$this->labelRelations = array(
 			"skos:prefLabel", "rdfs:label", "foaf:name", "dct:title", "dc:title", "sioc:name" );
@@ -92,7 +93,7 @@ rkJggg==
 		$this->firstGraphURI = null;
 		if( $uri )
 		{
-			$this->load( (string)$uri );
+			$this->load( Graphite::asString($uri) );
 		}
 
 		$this->bnodeprefix = 0;
@@ -154,7 +155,9 @@ rkJggg==
 		}
 	}
 
+	public function setARC2Config( $config ) { $this->arc2config = $config; }
 	public function setDebug( $boolean ) { $this->debug = $boolean; }
+	public function setLang( $lang ) { $this->lang = $lang; }
 
 	/**
 	 * Return a list of the relations currently used for $resource->label(), if called with a parameter then this should be an array to <strong>replace</strong> the current list. To just add additonal relation types to use as labels, use addLabelRelation($relation).
@@ -218,12 +221,13 @@ rkJggg==
 		if( substr( $uri,0,5 ) == "data:" )
 		{
 			$data = urldecode( preg_replace( "/^data:[^,]*,/","", $uri ) );
-			$parser = ARC2::getTurtleParser($this->arc2config);
+			$parser = ARC2::getTurtleParser( $this->arc2config );
 			$parser->parse( $uri, $data );
 		}
 		else
 		{
-            if( $this->loaded( $uri ) !== false ) { return $this->loaded( $uri ); }
+			if( $this->loaded( $uri ) !== false ) { return $this->loaded( $uri ); }
+
 			$data = $this->retriever->retrieve($uri);
 
 			if(!empty($data))
@@ -234,6 +238,7 @@ rkJggg==
 			else
 			{
 				$opts = array();
+ 				if( isset($this->arc2config) ) { $opts =  $this->arc2config; }
 				$opts['http_accept_header']= 'Accept: application/rdf+xml; q=0.9, text/turtle; q=0.8, */*; q=0.1';
 
 				$parser = ARC2::getRDFParser($opts);
@@ -275,7 +280,7 @@ rkJggg==
 	 */
 	function addTurtle( $base, $data )
 	{
-		$parser = ARC2::getTurtleParser($this->arc2config);
+		$parser = ARC2::getTurtleParser( $this->arc2config );
 		$parser->parse( $base, $data );
 		$errors = $parser->getErrors();
 		$parser->resetErrors();
@@ -298,7 +303,7 @@ rkJggg==
 	 */
 	function addRDFXML( $base, $data )
 	{
-		$parser = ARC2::getRDFXMLParser($this->arc2config);
+		$parser = ARC2::getRDFXMLParser( $this->arc2config );
 		$parser->parse( $base, $data );
 		$errors = $parser->getErrors();
 		$parser->resetErrors();
@@ -365,7 +370,7 @@ rkJggg==
 		$s = $this->expandURI( $s );
 		$p = $this->expandURI( $p );
 		$o = $this->expandURI( $o );
-		if( isset( $o_datatype ) && $o_dataype != "literal" )
+		if( isset( $o_datatype ) && $o_datatype != "literal" )
 		{
 			$o_datatype = $this->expandURI( $o_datatype );
 		}
@@ -396,6 +401,21 @@ rkJggg==
 		if( isset( $o_datatype ) && $o_datatype )
 		{
 			if( $o_datatype == 'literal' ) { $o_datatype = null; }
+			# check for duplicates
+
+			# if there's existing triples with this subject & predicate,
+			# check for duplicates before adding this triple.
+			if( array_key_exists( $s, $this->t["sp"] ) 
+			 && array_key_exists( $p, $this->t["sp"][$s] ) )
+			{
+				foreach( $this->t["sp"][$s][$p] as $item )
+				{
+					# no need to add triple if we've already got it.
+					if( $item["v"] === $o 
+				 	&& $item["d"] === $o_datatype 
+				 	&& $item["l"] === $o_lang ) { return; }
+				}
+			}
 			$this->t["sp"][$s][$p][] = array(
 				"v"=>$o,
 				"d"=>$o_datatype,
@@ -403,9 +423,20 @@ rkJggg==
 		}
 		else
 		{
+			# if there's existing triples with this subject & predicate,
+			# check for duplicates before adding this triple.
+			if( array_key_exists( $s, $this->t["sp"] ) 
+			 && array_key_exists( $p, $this->t["sp"][$s] ) )
+			{
+				foreach( $this->t["sp"][$s][$p] as $item )
+				{
+					# no need to add triple if we've already got it.
+					if( $item === $o ) { return; } 
+				}
+			}
 			$this->t["sp"][$s][$p][] = $o;
+			$this->t["op"][$o][$p][] = $s;
 		}
-		$this->t["op"][$o][$p][] = $s;
 	}
 
 	/**
@@ -426,7 +457,11 @@ rkJggg==
 	 */
 	public function serialize( $type = "RDFXML" )
 	{
-		$serializer = ARC2::getSer( $type, array( "ns" => $this->ns ) );
+		$ns = $this->ns;
+		unset( $ns["dct"] ); 
+		// use dcterms for preference. duplicates seem to cause
+		// bugs in the serialiser
+		$serializer = ARC2::getSer( $type, array( "ns" => $ns ));
 		return $serializer->getSerializedTriples( $this->toArcTriples() );
 	}
 
@@ -512,15 +547,15 @@ rkJggg==
 	 */
 	public function expandURI( $uri )
 	{
-		if( preg_match( '/:/', (string)$uri ) )
+		if( preg_match( '/:/', Graphite::asString($uri) ) )
 		{
-			list( $ns, $tag ) = preg_split( "/:/", (string)$uri, 2 );
+			list( $ns, $tag ) = preg_split( "/:/", Graphite::asString($uri), 2 );
 			if( isset($this->ns[$ns]) )
 			{
 				return $this->ns[$ns].$tag;
 			}
 		}
-		return (string)$uri;
+		return Graphite::asString($uri);
 	}
 
 	/**
