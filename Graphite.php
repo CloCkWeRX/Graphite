@@ -341,20 +341,33 @@ rkJggg==
 
 		foreach( $triples as $t )
 		{
-			if( $this->workAround4StoreBNodeBug )
-			{
-				if( $t["s"] == "_:NULL" || $t["o"] == "_:NULL" ) { continue; }
+			if ($this->workAround4StoreBNodeBug && ( $t["s"] == "_:NULL" || $t["o"] == "_:NULL" )) { 
+				continue; 
 			}
+
 			$t["s"] = $this->addBnodePrefix( $this->cleanURI($t["s"]) );
-			if( !isset($map[$t["s"]]) ) { continue; }
+
+			if( !isset($map[$t["s"]]) ) { 
+				continue; 
+			}
+
 			$t["p"] = $this->cleanURI($t["p"]);
-			if( $t["p"] != "http://www.w3.org/2002/07/owl#sameAs" ) { continue; }
+
+			if( $t["p"] != "http://www.w3.org/2002/07/owl#sameAs" ) { 
+				continue; 
+			}
+
 			$aliases[$this->addBnodePrefix( $t["o"] )] = $t["s"];
 		}
+
 		foreach( $triples as $t )
 		{
 			$datatype = @$t["o_datatype"];
-			if( @$t["o_type"] == "literal" && !$datatype ) { $datatype = "literal"; }
+
+			if( @$t["o_type"] == "literal" && !$datatype ) { 
+				$datatype = "literal"; 
+			}
+
 			$this->addTriple( $t["s"], $t["p"], $t["o"], $datatype, @$t["o_lang"], $aliases );
 		}
 		return sizeof( $triples );
@@ -370,10 +383,12 @@ rkJggg==
 		$s = $this->expandURI( $s );
 		$p = $this->expandURI( $p );
 		$o = $this->expandURI( $o );
+
 		if( isset( $o_datatype ) && $o_datatype != "literal" )
 		{
 			$o_datatype = $this->expandURI( $o_datatype );
 		}
+
 		$this->addTriple( $s,$p,$o,$o_datatype,$o_lang,$aliases );
 	}
 
@@ -394,9 +409,9 @@ rkJggg==
 			$o = $this->addBnodePrefix( $this->cleanURI( $o ) );
 		}
 
-		if( isset($aliases[$s]) ) { $s=$aliases[$s]; }
-		if( isset($aliases[$p]) ) { $p=$aliases[$p]; }
-		if( isset($aliases[$o]) ) { $o=$aliases[$o]; }
+		if( isset($aliases[$s]) ) { $s = $aliases[$s]; }
+		if( isset($aliases[$p]) ) { $p = $aliases[$p]; }
+		if( isset($aliases[$o]) ) { $o = $aliases[$o]; }
 
 		if( isset( $o_datatype ) && $o_datatype )
 		{
