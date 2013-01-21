@@ -59,6 +59,7 @@ class Graphite
 
 		$this->loaded = array();
 		$this->debug = false;
+		$this->arc2config = null;
 
 		$this->labelRelations = array(
 			"skos:prefLabel", "rdfs:label", "foaf:name", "dct:title", "dc:title", "sioc:name" );
@@ -217,7 +218,7 @@ rkJggg==
 		if( substr( $uri,0,5 ) == "data:" )
 		{
 			$data = urldecode( preg_replace( "/^data:[^,]*,/","", $uri ) );
-			$parser = ARC2::getTurtleParser();
+			$parser = ARC2::getTurtleParser($this->arc2config);
 			$parser->parse( $uri, $data );
 		}
 		else
@@ -227,7 +228,7 @@ rkJggg==
 
 			if(!empty($data))
 			{
-				$parser = ARC2::getRDFXMLParser();
+				$parser = ARC2::getRDFXMLParser($this->arc2config);
 				$parser->parse( $uri, $data );
 			}
 			else
@@ -274,7 +275,7 @@ rkJggg==
 	 */
 	function addTurtle( $base, $data )
 	{
-		$parser = ARC2::getTurtleParser();
+		$parser = ARC2::getTurtleParser($this->arc2config);
 		$parser->parse( $base, $data );
 		$errors = $parser->getErrors();
 		$parser->resetErrors();
@@ -297,7 +298,7 @@ rkJggg==
 	 */
 	function addRDFXML( $base, $data )
 	{
-		$parser = ARC2::getRDFXMLParser();
+		$parser = ARC2::getRDFXMLParser($this->arc2config);
 		$parser->parse( $base, $data );
 		$errors = $parser->getErrors();
 		$parser->resetErrors();
