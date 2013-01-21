@@ -144,26 +144,38 @@ rkJggg==
 	 * $dir should be a directory the webserver has permission to read and write to. Any RDF/XML documents which graphite downloads will be saved here. If a cache exists and is newer than $age seconds then load() will use the document in the cache directory in preference to doing an HTTP request. $age defaults to 24*60*60 - 24 hours. This including this function can seriously improve graphite performance! If you want to always load certain documents, load them before setting the cache.
 	 *
 	 * @todo Shift to Graphite_Retriever
+	 * @todo Introduce logger
 	 */
 	public function cacheDir($dir, $age = 86400) # default age is 24 hours
 	{
 		$error = "";
-		if (!file_exists($dir)) { $error = "No such directory: $dir"; }
-		elseif (!is_dir($dir)) { $error = "Not a directory: $dir"; }
-		elseif (!is_writable($dir)) { $error = "Not writable: $dir"; }
+		if (!file_exists($dir)) { 
+			$error = "No such directory: $dir"; 
+		} elseif (!is_dir($dir)) { 
+			$error = "Not a directory: $dir"; 
+		} elseif (!is_writable($dir)) { 
+			$error = "Not writable: $dir"; 
+		}
+
 		if ($error) {
 			print "<ul><li>Graphite cacheDir error: $error</li></ul>";
-		}
-		else
-		{
+		} else {
 			$this->cacheDir = $dir;
 			$this->cacheAge = $age;
 		}
 	}
 
-	public function setARC2Config($config) { $this->arc2config = $config; }
-	public function setDebug($boolean) { $this->debug = $boolean; }
-	public function setLang($lang) { $this->lang = $lang; }
+	public function setARC2Config($config) { 
+		$this->arc2config = $config; 
+	}
+
+	public function setDebug($boolean) { 
+		$this->debug = $boolean; 
+	}
+
+	public function setLang($lang) { 
+		$this->lang = $lang; 
+	}
 
 	/**
 	 * Return a list of the relations currently used for $resource->label(), if called with a parameter then this should be an array to <strong>replace</strong> the current list. To just add additonal relation types to use as labels, use addLabelRelation($relation).
@@ -171,7 +183,11 @@ rkJggg==
 	public function labelRelations($new = null)
 	{
 		$lr = $this->labelRelations;
-		if (isset($new)) { $this->labelRelations = $new; }
+
+		if (isset($new)) { 
+			$this->labelRelations = $new; 
+		}
+
 		return $lr;
 	}
 
@@ -180,7 +196,7 @@ rkJggg==
 	 */
 	public function addLabelRelation($addition)
 	{
-		$this->labelRelations []= $addition;
+		$this->labelRelations[] = $addition;
 	}
 
 	/**
@@ -189,7 +205,9 @@ rkJggg==
 	public function mailtoIcon($new = null)
 	{
 		$icon = $this->mailtoIcon;
-		if (isset($new)) { $this->mailtoIcon = $new; }
+		if (isset($new)) { 
+			$this->mailtoIcon = $new; 
+		}
 		return $icon;
 	}
 
@@ -199,7 +217,9 @@ rkJggg==
 	public function telIcon($new = null)
 	{
 		$icon = $this->telIcon;
-		if (isset($new)) { $this->telIcon = $new; }
+		if (isset($new)) {
+		 $this->telIcon = $new; 
+		}
 		return $icon;
 	}
 
@@ -210,8 +230,7 @@ rkJggg==
 
 	function loaded($uri)
 	{
-		if (!array_key_exists($this->removeFragment($uri), $this->loaded))
-		{
+		if (!array_key_exists($this->removeFragment($uri), $this->loaded)) {
 			return false;
 		}
 		return $this->loaded[$this->removeFragment($uri)];
@@ -224,52 +243,51 @@ rkJggg==
 	{
 		$uri = $this->expandURI((string)$uri);
 
-		if (substr($uri,0,5) == "data:")
-		{
+		if (substr($uri,0,5) == "data:") {
 			$data = urldecode(preg_replace("/^data:[^,]*,/","", $uri));
 			$parser = ARC2::getTurtleParser($this->arc2config);
 			$parser->parse($uri, $data);
-		}
-		else
-		{
+		} else {
 			if ($this->loaded($uri) !== false) { return $this->loaded($uri); }
 
 			$data = $this->retriever->retrieve($uri);
 
-			if (!empty($data))
-			{
+			if (!empty($data)) {
 				$parser = ARC2::getRDFXMLParser($this->arc2config);
 				$parser->parse($uri, $data);
-			}
-			else
-			{
+			} else {
 				$opts = array();
- 				if (isset($this->arc2config)) { $opts =  $this->arc2config; }
+
+ 				if (isset($this->arc2config)) { 
+ 					$opts =  $this->arc2config; 
+ 				}
+
 				$opts['http_accept_header']= 'Accept: application/rdf+xml; q=0.9, text/turtle; q=0.8, */*; q=0.1';
 
 				$parser = ARC2::getRDFParser($opts);
 				# Don't try to load the same URI twice!
 
-				if (!isset($this->firstGraphURI))
-				{
+				if (!isset($this->firstGraphURI)) {
 					$this->firstGraphURI = $uri;
 				}
+
 				$parser->parse($uri);
 			}
 		}
 
 		$errors = $parser->getErrors();
 		$parser->resetErrors();
-		if (sizeof($errors))
-		{
-			if ($this->debug)
-			{
+
+		if (sizeof($errors)) {
+			if ($this->debug) {
 				print "<h3>Error loading: $uri</h3>";
 				print "<ul><li>".join("</li><li>", $errors)."</li></ul>";
 			}
 			return 0;
 		}
+
 		$this->loaded[$this->removeFragment($uri)] = $this->addTriples($parser->getTriples(), $aliases, $map);
+
 		return $this->loaded($uri);
 	}
 
@@ -345,7 +363,7 @@ rkJggg==
 	{
 		$this->bnodeprefix++;
 
-		foreach($triples as $t)
+		foreach ($triples as $t)
 		{
 			if ($this->workAround4StoreBNodeBug && ($t["s"] == "_:NULL" || $t["o"] == "_:NULL")) { 
 				continue; 
@@ -366,8 +384,7 @@ rkJggg==
 			$aliases[$this->addBnodePrefix($t["o"])] = $t["s"];
 		}
 
-		foreach($triples as $t)
-		{
+		foreach ($triples as $t) {
 			$datatype = @$t["o_datatype"];
 
 			if (@$t["o_type"] == "literal" && !$datatype) { 
@@ -466,7 +483,7 @@ rkJggg==
 	public function toArcTriples()
 	{
 		$arcTriples = array();
-		foreach($this->allSubjects() as $s)
+		foreach ($this->allSubjects() as $s)
 		{
 			$arcTriples = array_merge($arcTriples, $s->toArcTriples(false));
 		}
@@ -488,7 +505,9 @@ rkJggg==
 
 	public function cleanURI($uri)
 	{
-		if (!$uri) { return; }
+		if (!$uri) { 
+			return; 
+		}
 		return preg_replace('/^(https?:\/\/[^:\/]+):80\//','$1/', $uri);
 	}
 
