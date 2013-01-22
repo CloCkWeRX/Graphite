@@ -10,10 +10,10 @@ require_once("../arc/ARC2.php");
 require_once("../Graphite.php");
 
 $graph = new Graphite();
-$graph->ns( "foo", "http://example.org/foons/" );
-$graph->load( "mydata.rdf" );
-$graph->freeze( "mydata.rdf.graphite" );
+$graph->ns("foo", "http://example.org/foons/");
+$graph->load("mydata.rdf");
+$graph->freeze("mydata.rdf.graphite");
 
 # to use this graph from a script, use
-# $graph = Graphite::thaw( "mydata.rdf.graphite" );
+# $graph = Graphite::thaw("mydata.rdf.graphite");
 

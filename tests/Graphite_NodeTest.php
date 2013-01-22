@@ -102,6 +102,6 @@ class Graphite_NodeTest extends  PHPUnit_Framework_TestCase {
 
     public function test() {
         $this->markTestIncomplete('
-	        protected function parsePropertyArg( $arg )');
+	        protected function parsePropertyArg($arg )');
     }
 }

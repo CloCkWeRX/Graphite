@@ -10,27 +10,27 @@ class Graphite_Description
 	var $routes = array();
 	var $tree = array(
 		"+" => array(),
-		"-" => array() );
+		"-" => array());
 	# header, footer
 
-	function __construct( $resource )
+	function __construct($resource )
 	{
 		$this->graph = $resource->g;
 		$this->resource = $resource;
 	}
 
-	function addRoute( $route )
+	function addRoute($route )
 	{
 		$this->routes[$route] = true;
-		$preds = preg_split( '/\//', $route );
+		$preds = preg_split( '/\//', $route);
 		$treeptr = &$this->tree;
-		foreach( $preds as $pred )
+		foreach ($preds as $pred )
 		{
 			$dir = "+";
-			if ( substr($pred,0,1) == "-" ) { $pred = substr($pred,1); $dir = "-"; }
-			if ( !isset( $treeptr[$dir][$pred] ) )
+			if (substr($pred,0,1) == "-") { $pred = substr($pred,1); $dir = "-"; }
+			if (!isset($treeptr[$dir][$pred] ) )
 			{
-				$treeptr[$dir][$pred] = array( "+" => array(), "-" => array() );
+				$treeptr[$dir][$pred] = array("+" => array(), "-" => array());
 			}
 			$treeptr = &$treeptr[$dir][$pred];
 		}
@@ -39,36 +39,36 @@ class Graphite_Description
 	function toDebug()
 	{
 		$json = array();
-		$this->_jsonify( $this->tree, $this->resource, $json );
+		$this->_jsonify($this->tree, $this->resource, $json);
 
-		return print_r( $json, 1 );
+		return print_r($json, 1);
 	}
 
 	function toJSON()
 	{
 		$json = array();
-		$this->_jsonify( $this->tree, $this->resource, $json );
+		$this->_jsonify($this->tree, $this->resource, $json);
 
-		return json_encode( $json );
+		return json_encode($json);
 	}
 
-	function _jsonify( $tree, $resource, &$json )
+	function _jsonify($tree, $resource, &$json )
 	{
-		foreach( $resource->relations() as $relation )
+		foreach ($resource->relations() as $relation )
 		{
-			$code = $this->graph->shrinkURI( $relation );
+			$code = $this->graph->shrinkURI($relation);
 			$jsonkey = $code;
 			$dir = "+";
-			if ( $relation->nodeType() == "#inverseRelation" )
+			if ($relation->nodeType() == "#inverseRelation")
 			{
 				$dir = "-";
 				$jsonkey = "$jsonkey of";
 			}
-			if ( !isset($tree[$dir]["*"]) && !isset($tree[$dir][$code]) ) { continue; }
+			if (!isset($tree[$dir]["*"]) && !isset($tree[$dir][$code])) { continue; }
 
-			foreach( $resource->all( $relation ) as $value )
+			foreach ($resource->all($relation ) as $value )
 			{
-				if ( is_a( $value, "Graphite_Literal" ) )
+				if (is_a($value, "Graphite_Literal") )
 				{
 					$json[$jsonkey][] = (string)$value;
 				}
@@ -76,14 +76,14 @@ class Graphite_Description
 				{
 					$subjson = array();
 					$uri = (string)$value;
-					if ( substr( $uri,0,2 ) != "_:" ) { $subjson["_uri"] = $uri; }
-					if ( isset( $tree[$dir][$code]) )
+					if (substr($uri,0,2 ) != "_:") { $subjson["_uri"] = $uri; }
+					if (isset($tree[$dir][$code]) )
 					{
-						$this->_jsonify( $tree[$dir][$code], $value, $subjson );
+						$this->_jsonify($tree[$dir][$code], $value, $subjson);
 					}
-					if ( isset( $tree[$dir]["*"]) )
+					if (isset($tree[$dir]["*"]) )
 					{
-						$this->_jsonify( $tree[$dir]["*"], $value, $subjson );
+						$this->_jsonify($tree[$dir]["*"], $value, $subjson);
 					}
 					$json[$jsonkey][] = $subjson;
 				}
@@ -94,29 +94,29 @@ class Graphite_Description
 	function toGraph()
 	{
 		$new_graph = new Graphite();
-		$this->_tograph( $this->tree, $this->resource, $new_graph );
+		$this->_tograph($this->tree, $this->resource, $new_graph);
 		return $new_graph;
 	}
 
-	function _tograph( $tree, $resource, &$new_graph )
+	function _tograph($tree, $resource, &$new_graph )
 	{
-		foreach( $resource->relations() as $relation )
+		foreach ($resource->relations() as $relation )
 		{
-			$code = $this->graph->shrinkURI( $relation );
+			$code = $this->graph->shrinkURI($relation);
 			$dir = "+";
-			if ( $relation->nodeType() == "#inverseRelation" )
+			if ($relation->nodeType() == "#inverseRelation")
 			{
 				$dir = "-";
 			}
 
-			if ( !isset($tree[$dir]["*"]) && !isset($tree[$dir][$code]) ) { continue; }
+			if (!isset($tree[$dir]["*"]) && !isset($tree[$dir][$code])) { continue; }
 
-			foreach( $resource->all( $relation ) as $value )
+			foreach ($resource->all($relation ) as $value )
 			{
-				if ( is_a( $value, "Graphite_Literal" ) )
+				if (is_a($value, "Graphite_Literal") )
 				{
 					$datatype = $value->datatype();
-					if ( !isset($datatype) ) { $datatype='literal'; }
+					if (!isset($datatype)) { $datatype='literal'; }
 					$new_graph->addTriple(
 						(string)$resource,
 						(string)$relation,
@@ -127,15 +127,15 @@ class Graphite_Description
 				}
 				else
 				{
-					if ( isset( $tree[$dir][$code]) )
+					if (isset($tree[$dir][$code]) )
 					{
-						$this->_tograph( $tree[$dir][$code], $value, $new_graph );
+						$this->_tograph($tree[$dir][$code], $value, $new_graph);
 					}
-					if ( isset( $tree[$dir]["*"]) )
+					if (isset($tree[$dir]["*"]) )
 					{
-						$this->_tograph( $tree[$dir]["*"], $value, $new_graph );
+						$this->_tograph($tree[$dir]["*"], $value, $new_graph);
 					}
-					if ( $dir == "+" )
+					if ($dir == "+")
 					{
 						$new_graph->addTriple(
 							(string)$resource,
@@ -156,42 +156,42 @@ class Graphite_Description
 		}
 	}
 
-	function loadSPARQL( $endpoint, $debug = false )
+	function loadSPARQL($endpoint, $debug = false )
 	{
-		$bits = $this->_toSPARQL( $this->tree, "", null, "" );
+		$bits = $this->_toSPARQL($this->tree, "", null, "");
 		$n = 0;
-		foreach( $bits as $bit )
+		foreach ($bits as $bit )
 		{
 			$sparql = "CONSTRUCT { ".$bit['construct']." } WHERE { ".$bit['where']." }";
-			if ( $debug || @$_GET["_graphite_debug"] ) {
+			if ($debug || @$_GET["_graphite_debug"]) {
 				 print "<div style='padding: 1em'><tt>\n\n".htmlspecialchars($sparql)."</tt></div>\n\n";
 			}
-			$n+=$this->graph->loadSPARQL( $endpoint, $sparql );
+			$n+=$this->graph->loadSPARQL($endpoint, $sparql);
 		}
 		return $n;
 	}
 
-	function _toSPARQL($tree, $suffix, $in_dangler = null, $sparqlprefix = "" )
+	function _toSPARQL($tree, $suffix, $in_dangler = null, $sparqlprefix = "")
 	{
 		$bits = array();
-		if ( !isset( $in_dangler ) )
+		if (!isset($in_dangler ) )
 		{
 			$in_dangler = "<".(string)$this->resource.">";
 		}
 
 		$i = 0;
-		foreach( $tree as $dir=>$routes )
+		foreach ($tree as $dir=>$routes )
 		{
-			if ( sizeof($routes) == 0 ) { continue; }
+			if (sizeof($routes) == 0) { continue; }
 
 			$pres = array();
-			if ( isset($routes["*"]) )
+			if (isset($routes["*"]) )
 			{
 				$sub = "?s".$suffix."_".$i;
 				$pre = "?p".$suffix."_".$i;
 				$obj = "?o".$suffix."_".$i;
 
-				if ( $dir == "+" )
+				if ($dir == "+")
 				{
 					$out_dangler = $obj;
 					$sub = $in_dangler;
@@ -204,27 +204,27 @@ class Graphite_Description
 
 				$construct = "$sub $pre $obj . ";
 				$where = "$sparqlprefix $sub $pre $obj .";
-				if ( isset( $routes["*"] ) )
+				if (isset($routes["*"] ) )
 				{
-					$bits_from_routes = $this->_toSPARQL( $routes["*"], $suffix."_".$i, $out_dangler, "" );
+					$bits_from_routes = $this->_toSPARQL($routes["*"], $suffix."_".$i, $out_dangler, "");
 					$i++;
-					foreach( $bits_from_routes as $bit )
+					foreach ($bits_from_routes as $bit )
 					{
 						$construct .= $bit["construct"];
 						$where .= " OPTIONAL { ".$bit["where"]." }";
 					}
 				}
-				$bits []= array( "where"=>$where, "construct"=>$construct );
+				$bits []= array("where"=>$where, "construct"=>$construct);
 
-				foreach( $routes as $pred=>$route )
+				foreach ($routes as $pred=>$route )
 				{
-					if ( $pred == "*" ) { continue; }
+					if ($pred == "*") { continue; }
 
-					$pre = "<".$this->graph->expandURI( $pred ).">";
+					$pre = "<".$this->graph->expandURI($pred ).">";
 
-					$bits_from_routes = $this->_toSPARQL( $route, $suffix."_".$i, $out_dangler, "$sparqlprefix $sub $pre $obj ." );
+					$bits_from_routes = $this->_toSPARQL($route, $suffix."_".$i, $out_dangler, "$sparqlprefix $sub $pre $obj .");
 					$i++;
-					foreach( $bits_from_routes as $bit )
+					foreach ($bits_from_routes as $bit )
 					{
 						$bits []= $bit;
 					}
@@ -232,13 +232,13 @@ class Graphite_Description
 			}
 			else
 			{
-				foreach( array_keys( $routes ) as $pred )
+				foreach ( array_keys($routes ) as $pred )
 				{
 					$sub = "?s".$suffix."_".$i;
-					$pre = "<".$this->graph->expandURI( $pred ).">";
+					$pre = "<".$this->graph->expandURI($pred ).">";
 					$obj = "?o".$suffix."_".$i;
 
-					if ( $dir == "+" )
+					if ($dir == "+")
 					{
 						$out_dangler = $obj;
 						$sub = $in_dangler;
@@ -249,18 +249,18 @@ class Graphite_Description
 						$obj = $in_dangler;
 					}
 
-					$bits_from_routes = $this->_toSPARQL( $routes[$pred],$suffix."_".$i, $out_dangler, "" );
+					$bits_from_routes = $this->_toSPARQL($routes[$pred],$suffix."_".$i, $out_dangler, "");
 					$i++;
 
 					$construct = "$sub $pre $obj . ";
 					$where = "$sparqlprefix $sub $pre $obj .";
-					foreach( $bits_from_routes as $bit )
+					foreach ($bits_from_routes as $bit )
 					{
 						$construct .= $bit["construct"];
 						$where .= " OPTIONAL { ".$bit["where"]." }";
 					}
 
-					$bits []= array( "where"=>$where, "construct"=>$construct );
+					$bits []= array("where"=>$where, "construct"=>$construct);
 				}
 			}
 		}
@@ -279,55 +279,55 @@ class Graphite_Description
 		);
 	}
 
-	function handleFormat( $format )
+	function handleFormat($format )
 	{
-		if ( $format == 'json' )
+		if ($format == 'json' )
 		{
-			if ( isset( $_GET['callback'] ) )
+			if (isset($_GET['callback'] ) )
 			{
-				header( "Content-type: application/javascript" );
-				print $_GET['callback']."( ".$this->toJSON()." );\n";
+				header("Content-type: application/javascript");
+				print $_GET['callback']."(".$this->toJSON().");\n";
 			}
 			else
 			{
-				header( "Content-type: application/json" );
+				header("Content-type: application/json");
 				print $this->toJSON();
 			}
 
 			return true;
 		}
 
-		if ( $format == 'ttl' )
+		if ($format == 'ttl' )
 		{
-			header( "Content-type: text/turtle" );
-			print $this->toGraph()->serialize( "Turtle" );
+			header("Content-type: text/turtle");
+			print $this->toGraph()->serialize("Turtle");
 			return true;
 		}
 
-		if ( $format == 'nt' )
+		if ($format == 'nt' )
 		{
-			header( "Content-type: text/plain" );
-			print $this->toGraph()->serialize( "NTriples" );
+			header("Content-type: text/plain");
+			print $this->toGraph()->serialize("NTriples");
 			return true;
 		}
 
-		if ( $format == 'rdf' )
+		if ($format == 'rdf' )
 		{
-			header( "Content-type: application/rdf+xml" );
-			print $this->toGraph()->serialize( "RDFXML" );
+			header("Content-type: application/rdf+xml");
+			print $this->toGraph()->serialize("RDFXML");
 			return true;
 		}
 
-		if ( $format == 'rdf.html' )
+		if ($format == 'rdf.html' )
 		{
-			header( "Content-type: text/html" );
+			header("Content-type: text/html");
 			print $this->toGraph()->dump();
 			return true;
 		}
 
-		if ( $format == 'debug' )
+		if ($format == 'debug' )
 		{
-			header( "Content-type: text/plain" );
+			header("Content-type: text/plain");
 			print $this->toDebug();
 			return true;
 		}

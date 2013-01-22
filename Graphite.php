@@ -43,7 +43,7 @@ class Graphite
 			"op" => array()
 		);
 
-		foreach($namespaces as $short=>$long)
+		foreach ($namespaces as $short=>$long)
 		{
 			$this->ns($short, $long);
 		}
@@ -446,7 +446,7 @@ rkJggg==
 			if (array_key_exists($s, $this->t["sp"]) 
 			 && array_key_exists($p, $this->t["sp"][$s]))
 			{
-				foreach($this->t["sp"][$s][$p] as $item)
+				foreach ($this->t["sp"][$s][$p] as $item)
 				{
 					# no need to add triple if we've already got it.
 					if ($item["v"] === $o 
@@ -466,7 +466,7 @@ rkJggg==
 			if (array_key_exists($s, $this->t["sp"]) 
 			 && array_key_exists($p, $this->t["sp"][$s]))
 			{
-				foreach($this->t["sp"][$s][$p] as $item)
+				foreach ($this->t["sp"][$s][$p] as $item)
 				{
 					# no need to add triple if we've already got it.
 					if ($item === $o) { return; } 
@@ -571,7 +571,7 @@ rkJggg==
 	public function shrinkURI($uri)
 	{
 		if ((string)$uri == "") { return "* This Document *"; }
-		foreach($this->ns as $short=>$long)
+		foreach ($this->ns as $short=>$long)
 		{
 			if (substr((string)$uri, 0, strlen($long)) == $long)
 			{
@@ -604,7 +604,7 @@ rkJggg==
 	public function allSubjects()
 	{
 		$r = new Graphite_ResourceList($this);
-		foreach($this->t["sp"] as $subject_uri=>$foo)
+		foreach ($this->t["sp"] as $subject_uri=>$foo)
 		{
 			 $r[] = new Graphite_Resource($this, $subject_uri);
 		}
@@ -617,7 +617,7 @@ rkJggg==
 	public function allObjects()
 	{
 		$r = new Graphite_ResourceList($this);
-		foreach($this->t["op"] as $object_uri=>$foo)
+		foreach ($this->t["op"] as $object_uri=>$foo)
 		{
 			 $r[] = new Graphite_Resource($this, $object_uri);
 		}
@@ -636,7 +636,7 @@ rkJggg==
 	public function dump($options=array())
 	{
 		$r = array();
-		foreach($this->t["sp"] as $subject_uri=>$foo)
+		foreach ($this->t["sp"] as $subject_uri=>$foo)
 		{
 			$subject = new Graphite_Resource($this, $subject_uri);
 			$r []= $subject->dump($options);
@@ -650,7 +650,7 @@ rkJggg==
 	public function dumpText($options=array())
 	{
 		$r = array();
-		foreach($this->t["sp"] as $subject_uri=>$foo)
+		foreach ($this->t["sp"] as $subject_uri=>$foo)
 		{
 			$subject = new Graphite_Resource($this, $subject_uri);
 			$r []= $subject->dumpText($options);
@@ -678,7 +678,7 @@ function graphite_sort_list_cmp($a, $b)
 {
 	global $graphite_sort_args;
 
-	foreach($graphite_sort_args as $arg)
+	foreach ($graphite_sort_args as $arg)
 	{
 		$va = $a->get($arg);
 		$vb = $b->get($arg);

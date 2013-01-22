@@ -26,11 +26,11 @@ class Graphite_Literal extends Graphite_Node
 	function dumpValueText()
 	{
 		$r = '"'.$this->v.'"';
-		if ( isset($this->triple["l"]) && $this->triple["l"])
+		if (isset($this->triple["l"]) && $this->triple["l"])
 		{
 			$r.="@".$this->triple["l"];
 		}
-		if ( isset($this->triple["d"]) )
+		if (isset($this->triple["d"]) )
 		{
 			$r.="^^".$this->g->shrinkURI($this->triple["d"]);
 		}
@@ -39,19 +39,19 @@ class Graphite_Literal extends Graphite_Node
 
 	function dumpValueHTML()
 	{
-		$v = htmlspecialchars( $this->triple["v"], ENT_COMPAT,"UTF-8" );
+		$v = htmlspecialchars($this->triple["v"], ENT_COMPAT,"UTF-8");
 
-		$v = preg_replace( "/\t/", "<span class='special_char' style='font-size:70%'>[tab]</span>", $v );
-		$v = preg_replace( "/\n/", "<span class='special_char' style='font-size:70%'>[nl]</span><br />", $v );
-		$v = preg_replace( "/\r/", "<span class='special_char' style='font-size:70%'>[cr]</span>", $v );
-		$v = preg_replace( "/  +/e", "\"<span class='special_char' style='font-size:70%'>\".str_repeat(\"␣\",strlen(\"$0\")).\"</span>\"", $v );
+		$v = preg_replace("/\t/", "<span class='special_char' style='font-size:70%'>[tab]</span>", $v);
+		$v = preg_replace("/\n/", "<span class='special_char' style='font-size:70%'>[nl]</span><br />", $v);
+		$v = preg_replace("/\r/", "<span class='special_char' style='font-size:70%'>[cr]</span>", $v);
+		$v = preg_replace("/  +/e", "\"<span class='special_char' style='font-size:70%'>\".str_repeat(\"␣\",strlen(\"$0\")).\"</span>\"", $v);
 		$r = '"'.$v.'"';
 
-		if ( isset($this->triple["l"]) && $this->triple["l"])
+		if (isset($this->triple["l"]) && $this->triple["l"])
 		{
 			$r.="@".$this->triple["l"];
 		}
-		if ( isset($this->triple["d"]) )
+		if (isset($this->triple["d"]) )
 		{
 			$r.="^^".$this->g->shrinkURI($this->triple["d"]);
 		}
@@ -60,7 +60,7 @@ class Graphite_Literal extends Graphite_Node
 
 	function nodeType()
 	{
-		if ( isset($this->triple["d"]) )
+		if (isset($this->triple["d"]) )
 		{
 			return $this->triple["d"];
 		}
