@@ -30,7 +30,7 @@ class Graphite_Literal extends Graphite_Node
 		{
 			$r.="@".$this->triple["l"];
 		}
-		if (isset($this->triple["d"]) )
+		if (isset($this->triple["d"]))
 		{
 			$r.="^^".$this->g->shrinkURI($this->triple["d"]);
 		}
@@ -51,7 +51,7 @@ class Graphite_Literal extends Graphite_Node
 		{
 			$r.="@".$this->triple["l"];
 		}
-		if (isset($this->triple["d"]) )
+		if (isset($this->triple["d"]))
 		{
 			$r.="^^".$this->g->shrinkURI($this->triple["d"]);
 		}
@@ -60,7 +60,7 @@ class Graphite_Literal extends Graphite_Node
 
 	function nodeType()
 	{
-		if (isset($this->triple["d"]) )
+		if (isset($this->triple["d"]))
 		{
 			return $this->triple["d"];
 		}

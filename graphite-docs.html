@@ -105,7 +105,7 @@
 
 <dt>$string = $resource-&gt;getString($property);</dt>
 <dt>$string = $resource-&gt;getString( <a href='#resources'>*resource list*</a>);</dt>
-<dd>As for get() but return the result's string value. Shortened version of $resource-&gt;get($property )-&gt;__toString();</dd>
+<dd>As for get() but return the result's string value. Shortened version of $resource-&gt;get($property)-&gt;__toString();</dd>
 
 <dt>$boolean = $resource-&gt;has($property);</dt>
 <dt>$boolean = $resource-&gt;has( <a href='#resources'>*resource list*</a>);</dt>
@@ -233,7 +233,7 @@ https://github.com/cgutteridge/Graphite/blob/master/examples/freeze.php
 
 <dt>$new_resourcelist = $resourcelist-&gt;union($resource);</dt>
 <dt>$new_resourcelist = $resourcelist-&gt;union( <a href='#resources'>*resource list*</a>);</dt>
-<dd>Create a new resource list with the given resource or list of resources merged with the current list. Functionally the same as calling $resourcelist-&gt;append( ... )-&gt;distinct()</dd>
+<dd>Create a new resource list with the given resource or list of resources merged with the current list. Functionally the same as calling $resourcelist-&gt;append( ...)-&gt;distinct()</dd>
 
 <dt>$new_resourcelist = $resourcelist-&gt;intersection($resource);</dt>
 <dt>$new_resourcelist = $resourcelist-&gt;intersection( <a href='#resources'>*resource list*</a>);</dt>
@@ -267,16 +267,16 @@ To print a nicely formatted list of names, linking to the URIs.</dd>
 <p>$resource-&gt;get() is used as an example, it applies to many other methods.</p>
 
 <dl class="function_list">
-<dt>$resource-&gt;get($uri_string )</dt>
+<dt>$resource-&gt;get($uri_string)</dt>
 <dd>Such as "http://xmlns.com/foaf/0.1/name".</dd>
-<dt>$resource-&gt;get($short_uri_string )</dt>
+<dt>$resource-&gt;get($short_uri_string)</dt>
 <dd>using any namespace defined with $graph-&gt;ns() or just built in. eg. "foaf:name".</dd>
-<dt>$resource-&gt;get($resource ) </dt>
+<dt>$resource-&gt;get($resource) </dt>
 <dd>An instance of Graphite_resource.</dd>
-<dt>$resource-&gt;get($thing, $thing, $thing, ... )</dt>
-<dt>$resource-&gt;get( array($thing, $thing, $thing, ... ) )</dt>
+<dt>$resource-&gt;get($thing, $thing, $thing, ...)</dt>
+<dt>$resource-&gt;get( array($thing, $thing, $thing, ...))</dt>
 <dd>Where each thing is any of $uri_string, $short_uri_string or $resource.</dd>
-<dt>$resource-&gt;get($resourcelist ) </dt>
+<dt>$resource-&gt;get($resourcelist) </dt>
 <dd>An instance of Graphite_resourceList.</dd>
 </dl>
 <p>This should make it quick and easy to write readable code!</p>
@@ -294,7 +294,7 @@ To print a nicely formatted list of names, linking to the URIs.</dd>
 
 <p>The following example assumes that the PHP script is aliased to /building and everything after that in the path is a parameter to the script, eg. 59.html or 32.json</p>
 <pre>
-list($id, $format ) = preg_split("/\./", substr($_SERVER["PATH_INFO"], 1 ), 2);
+list($id, $format) = preg_split("/\./", substr($_SERVER["PATH_INFO"], 1), 2);
 $uri = 'http://id.southampton.ac.uk/building/'.$id;
 
 $graph = new Graphite();
@@ -312,7 +312,7 @@ $n = $rd-&gt;loadSPARQL("http://sparql.data.southampton.ac.uk/");
 
 if ($format != "html") {
         # Unless this is HTML just let Graphite serve the document.
-        if (!$rdesc-&gt;handleFormat($format )) { 
+        if (!$rdesc-&gt;handleFormat($format)) { 
 		header('HTTP/1.0 404 Not Found');
 		print "404 Not Found\n"; 
 	}

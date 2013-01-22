@@ -222,7 +222,7 @@ class Graphite_ResourceListTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(array(new Graphite_Resource($this->graph, 'cats'),
                                   new Graphite_Resource($this->graph, 'cats')),
             (array)$list3
-       );
+      );
     }
 
 }

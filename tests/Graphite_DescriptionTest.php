@@ -15,13 +15,13 @@ class Graphite_DescriptionTest extends PHPUnit_Framework_TestCase {
     public function test() {
         $this->markTestIncomplete(
             'function toJSON()
-	        function _jsonify($tree, $resource, &$json )
+	        function _jsonify($tree, $resource, &$json)
 	        function toGraph()
-	        function _tograph($tree, $resource, &$new_graph )
-	        function loadSPARQL($endpoint, $debug = false )
-	        function _toSPARQL($tree, $suffix, $in_dangler = null, $sparqlprefix = "", &$conbits )
+	        function _tograph($tree, $resource, &$new_graph)
+	        function loadSPARQL($endpoint, $debug = false)
+	        function _toSPARQL($tree, $suffix, $in_dangler = null, $sparqlprefix = "", &$conbits)
             function getFormats()
-	        function handleFormat($format )'
-       );
+	        function handleFormat($format)'
+      );
     }
 }

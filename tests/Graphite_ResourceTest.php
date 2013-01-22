@@ -145,7 +145,7 @@ class Graphite_ResourceTest extends PHPUnit_Framework_TestCase {
                     ->with('http://sameas.org/rdf?uri=' . urlencode('http://bob.com'))
                     ->will($this->returnValue(
                             file_get_contents(dirname(__FILE__) . '/data/sameas.org.rdf')
-                    ));
+                   ));
 
         $this->resource->uri = 'http://bob.com';
 
@@ -172,7 +172,7 @@ class Graphite_ResourceTest extends PHPUnit_Framework_TestCase {
             'o_type' => 'uri',
             'o_datatype' =>  null,
             'o_lang' => null,
-        )), $this->resource->toArcTriples());
+       )), $this->resource->toArcTriples());
 
 
         $this->assertSame(array(0 => array(
@@ -184,7 +184,7 @@ class Graphite_ResourceTest extends PHPUnit_Framework_TestCase {
             'o_type' => 'uri',
             'o_datatype' =>  null,
             'o_lang' => null,
-        )), $this->resource->toArcTriples(true));
+       )), $this->resource->toArcTriples(true));
     }
 
     public function testRelations() {

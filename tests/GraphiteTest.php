@@ -89,34 +89,34 @@ class Graphite_Test extends PHPUnit_Framework_TestCase {
         $this->assertTrue(array_key_exists(
             'http://my.com/cat#',
             $this->graph->t["sp"]
-        ));
+       ));
 
         $this->assertTrue(array_key_exists(
             'http://smells.com/nose_quanity',
             $this->graph->t["sp"]['http://my.com/cat#']
-        ));
+       ));
 
         $this->assertSame(
             array(0 => "Zero"),           
             $this->graph->t["sp"]['http://my.com/cat#']['http://smells.com/nose_quanity']
-       );
+      );
 
         // object predicate subject relation stored?
         // TODO: Think about this or literal values of int(0) which are type cast to string ''
         $this->assertTrue(array_key_exists(
             'Zero',
             $this->graph->t["op"]
-        ));
+       ));
 
         $this->assertTrue(array_key_exists(
             'http://smells.com/nose_quanity',
             $this->graph->t["op"]['Zero']
-        ));
+       ));
 
         $this->assertSame(
             array(0 => "http://my.com/cat#"),           
             $this->graph->t["op"]['Zero']['http://smells.com/nose_quanity']
-       );
+      );
 
     }
 
@@ -164,31 +164,31 @@ class Graphite_Test extends PHPUnit_Framework_TestCase {
 
     public function test() {
         $this->markTestIncomplete('
-	public function __construct($namespaces = array(), $uri = null )
-	public function freeze($filename )
-	public static function thaw($filename )
+	public function __construct($namespaces = array(), $uri = null)
+	public function freeze($filename)
+	public static function thaw($filename)
 	public static function __set_state($data) // As of PHP 5.1.0
-	public function cacheDir($dir, $age = 86400 ) # default age is 24 hours
-	public function labelRelations($new = null )
-	public function addLabelRelation($addition )
-	public function mailtoIcon($new = null )
-	public function telIcon($new = null )
-	function removeFragment($uri )
-	public function load($uri, $aliases = array(), $map = array() )
-	function loadSPARQL($endpoint, $query )
-	function addTurtle($base, $data )
-	function addRDFXML($base, $data )
-	function addBnodePrefix($uri ) 
-	function addTriples($triples, $aliases = array(), $map = array() )
-	function addCompressedTriple($s,$p,$o,$o_datatype=null,$o_lang=null,$aliases=array() )
-	function addTriple($s,$p,$o,$o_datatype=null,$o_lang=null,$aliases=array() )
+	public function cacheDir($dir, $age = 86400) # default age is 24 hours
+	public function labelRelations($new = null)
+	public function addLabelRelation($addition)
+	public function mailtoIcon($new = null)
+	public function telIcon($new = null)
+	function removeFragment($uri)
+	public function load($uri, $aliases = array(), $map = array())
+	function loadSPARQL($endpoint, $query)
+	function addTurtle($base, $data)
+	function addRDFXML($base, $data)
+	function addBnodePrefix($uri) 
+	function addTriples($triples, $aliases = array(), $map = array())
+	function addCompressedTriple($s,$p,$o,$o_datatype=null,$o_lang=null,$aliases=array())
+	function addTriple($s,$p,$o,$o_datatype=null,$o_lang=null,$aliases=array())
 	public function toArcTriples()
 	public function serialize($type = "RDFXML")
-	public function primaryTopic($uri = null )
-	public function allOfType($uri )
+	public function primaryTopic($uri = null)
+	public function allOfType($uri)
 	public function allObjects()
-	public function dump($options=array() )
-	public function dumpText($options=array() )
+	public function dump($options=array())
+	public function dumpText($options=array())
     ');
     }
 }

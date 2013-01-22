@@ -1,7 +1,7 @@
 <?php
 class Graphite_Node
 {
-	function __construct(Graphite $g )
+	function __construct(Graphite $g)
 	{
 		$this->g = $g;
 	}
