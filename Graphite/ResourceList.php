@@ -360,7 +360,7 @@ class Graphite_ResourceList extends ArrayIterator
 			if( ! $arg instanceof Graphite_Resource ) {
 				$arg = $this->g->resource( $arg );
 			}
-			$seen[Graphite::asString($arg)]=1;
+			$seen[(string)$arg]=1;
 		}
 
 		foreach( $args as $arg )
@@ -368,7 +368,7 @@ class Graphite_ResourceList extends ArrayIterator
 			if( ! $arg instanceof Graphite_Resource ) {
 				$arg = $this->g->resource( $arg );
 			}
-			if( ! isset($seen[Graphite::asString($arg)]) ) {
+			if( ! isset($seen[(string)$arg]) ) {
 				continue;
 			}
 			$list [] = $arg;

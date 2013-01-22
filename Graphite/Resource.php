@@ -4,7 +4,7 @@ class Graphite_Resource extends Graphite_Node
 	function __construct(Graphite $g, $uri )
 	{
 		$this->g = $g;
-		$this->uri = Graphite::asString($uri);
+		$this->uri = (string)$uri;
 	}
 
 	public function get( /* List */ )
@@ -26,7 +26,7 @@ class Graphite_Resource extends Graphite_Node
 
 		$l = $this->all( $args );
 		if( sizeof( $l ) == 0 ) { return; }
-		return Graphite::asString($l[0]);
+		return (string)$l[0];
 	}
 	# getString deprecated in favour of getLiteral
 	public function getString( /* List */ ) { return $this->getLiteral( func_get_args() ); }
@@ -61,7 +61,7 @@ class Graphite_Resource extends Graphite_Node
 		$l = array();
 		foreach( $this->all( $args ) as $item )
 		{
-			$l []= Graphite::asString($item);
+			$l []= (string)$item;
 		}
 		return new Graphite_ResourceList($this->g,$l);
 	}
@@ -252,11 +252,11 @@ class Graphite_Resource extends Graphite_Node
 		$cnt = 0;
 		foreach( $this->all( "owl:sameAs" ) as $sameas )
 		{
-			if( $prefix && substr( Graphite::asString($sameas), 0, strlen($prefix )) != $prefix )
+			if( $prefix && substr( (string)$sameas, 0, strlen($prefix )) != $prefix )
 			{
 				continue;
 			}
-			$cnt += $this->g->load( Graphite::asString($sameas), array( Graphite::asString($sameas)=>$this->uri ) );
+			$cnt += $this->g->load( (string)$sameas, array( (string)$sameas=>$this->uri ) );
 		}
 		return $cnt;
 	}
@@ -431,7 +431,7 @@ class Graphite_Resource extends Graphite_Node
 	}
 
 	function __toString() {
-		return !empty($this->uri) ? Graphite::asString($this->uri) : "";
+		return !empty($this->uri) ? (string)$this->uri : "";
 	}
 
 	function dumpValue($options=array())
@@ -462,9 +462,9 @@ class Graphite_Resource extends Graphite_Node
 		{
 			if( is_a( $arg, "Graphite_InverseRelation" ) )
 			{
-				return array( "op", Graphite::asString($arg) );
+				return array( "op", (string)$arg );
 			}
-			return array( "sp", Graphite::asString($arg) );
+			return array( "sp", (string)$arg );
 		}
 
 		$set = "sp";
