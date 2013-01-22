@@ -99,7 +99,7 @@ rkJggg==
 		$this->firstGraphURI = null;
 		if ($uri)
 		{
-			$this->load(Graphite::asString($uri));
+			$this->load((string)$uri);
 		}
 
 		$this->bnodeprefix = 0;
@@ -587,15 +587,15 @@ rkJggg==
 	 */
 	public function expandURI($uri)
 	{
-		if (preg_match('/:/', Graphite::asString($uri)))
+		if (preg_match('/:/', (string)$uri))
 		{
-			list($ns, $tag) = preg_split("/:/", Graphite::asString($uri), 2);
+			list($ns, $tag) = preg_split("/:/", (string)$uri, 2);
 			if (isset($this->ns[$ns]))
 			{
 				return $this->ns[$ns].$tag;
 			}
 		}
-		return Graphite::asString($uri);
+		return (string)$uri;
 	}
 
 	/**

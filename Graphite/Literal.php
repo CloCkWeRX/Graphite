@@ -1,7 +1,7 @@
 <?php
 class Graphite_Literal extends Graphite_Node
 {
-	function __construct(Graphite $g, $triple )
+	function __construct(Graphite $g, $triple)
 	{
 		$this->g = $g;
 		$this->setTriple($triple);
@@ -18,7 +18,7 @@ class Graphite_Literal extends Graphite_Node
 	}
 
 	function __toString() {
-		return isset($this->triple["v"]) ? Graphite::asString($this->triple['v']) : "";
+		return isset($this->triple["v"]) ? (string)$this->triple['v'] : "";
 	}
 	function datatype() { return @$this->triple["d"]; }
 	function language() { return @$this->triple["l"]; }
@@ -39,7 +39,7 @@ class Graphite_Literal extends Graphite_Node
 
 	function dumpValueHTML()
 	{
-		$v = htmlspecialchars( $this->triple["v"],ENT_COMPAT,"UTF-8" );
+		$v = htmlspecialchars( $this->triple["v"], ENT_COMPAT,"UTF-8" );
 
 		$v = preg_replace( "/\t/", "<span class='special_char' style='font-size:70%'>[tab]</span>", $v );
 		$v = preg_replace( "/\n/", "<span class='special_char' style='font-size:70%'>[nl]</span><br />", $v );
