@@ -17,14 +17,14 @@ class Graphite_Retriever {
 	 */
 	public function retrieve( $uri )
 	{
-		if( !isset($this->graph->cacheDir) ) { return null; }
+		if ( !isset($this->graph->cacheDir) ) { return null; }
 
 		$filename = $this->graph->cacheDir."/".md5( $this->graph->removeFragment( $uri ) );
 
-		if( !file_exists( $filename ) || filemtime($filename)+$this->graph->cacheAge < time() )
+		if ( !file_exists( $filename ) || filemtime($filename)+$this->graph->cacheAge < time() )
 		{
 			# decache if out of date, even if we fail to re cache.
-			if( file_exists( $filename ) ) { unlink( $filename ); }
+			if ( file_exists( $filename ) ) { unlink( $filename ); }
 			$url = $uri;
 			$ttl = 16;
 			$mime = "";
@@ -34,10 +34,10 @@ class Graphite_Retriever {
 			{
 				$ttl--;
 				# dirty hack to set the accept header without using curl
-				if( !$rdf_fp = fopen($url, 'r') ) { break; }
+				if ( !$rdf_fp = fopen($url, 'r') ) { break; }
 				$meta_data = stream_get_meta_data($rdf_fp);
 				$redir = 0;
-				if( @!$meta_data['wrapper_data'] )
+				if ( @!$meta_data['wrapper_data'] )
 				{
 					fclose($rdf_fp);
 					continue;
@@ -47,7 +47,7 @@ class Graphite_Retriever {
 					if (substr(strtolower($response), 0, 10) == 'location: ')
 					{
 						$newurl = substr($response, 10);
-						if( substr( $newurl, 0, 1 ) == "/" )
+						if ( substr( $newurl, 0, 1 ) == "/" )
 						{
 							$parts = preg_split( "/\//",$url );
 							$newurl = $parts[0]."//".$parts[2].$newurl;
@@ -60,10 +60,10 @@ class Graphite_Retriever {
 						$mime = preg_replace( "/\s*;.*$/","", substr($response, 14));
 					}
 				}
-				if( !$redir ) { break; }
+				if ( !$redir ) { break; }
 			}
 			ini_set('user_agent', $old_user_agent);
-			if( $ttl > 0 && $mime == "application/rdf+xml" && $rdf_fp )
+			if ( $ttl > 0 && $mime == "application/rdf+xml" && $rdf_fp )
 			{
 				# candidate for caching!
 				if (!$cache_fp = fopen($filename, 'w'))
@@ -80,7 +80,7 @@ class Graphite_Retriever {
 			@fclose($rdf_fp);
 		}
 
-		if( isset( $filename ) &&  file_exists( $filename ) )
+		if ( isset( $filename ) &&  file_exists( $filename ) )
 		{
 			return file_get_contents($filename);
 		}

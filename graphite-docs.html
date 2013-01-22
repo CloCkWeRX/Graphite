@@ -310,9 +310,9 @@ $rd-&gt;addRoute( '-sr:within/rdfs:label' );
 
 $n = $rd-&gt;loadSPARQL( "http://sparql.data.southampton.ac.uk/" );
 
-if( $format != "html" ) {
+if ( $format != "html" ) {
         # Unless this is HTML just let Graphite serve the document.
-        if( !$rdesc-&gt;handleFormat( $format ) ) { 
+        if ( !$rdesc-&gt;handleFormat( $format ) ) { 
 		header('HTTP/1.0 404 Not Found');
 		print "404 Not Found\n"; 
 	}

@@ -10,22 +10,22 @@ class Graphite_Resource extends Graphite_Node
 	public function get( /* List */ )
 	{
 		$args = func_get_args();
-		if( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
-		if( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
+		if ( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
+		if ( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
 
 		$l = $this->all( $args );
-		if( sizeof( $l ) == 0 ) { return new Graphite_Null($this->g); }
+		if ( sizeof( $l ) == 0 ) { return new Graphite_Null($this->g); }
 		return $l[0];
 	}
 
 	public function getLiteral( /* List */ )
 	{
 		$args = func_get_args();
-		if( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
-		if( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
+		if ( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
+		if ( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
 
 		$l = $this->all( $args );
-		if( sizeof( $l ) == 0 ) { return; }
+		if ( sizeof( $l ) == 0 ) { return; }
 		return (string)$l[0];
 	}
 	# getString deprecated in favour of getLiteral
@@ -34,29 +34,29 @@ class Graphite_Resource extends Graphite_Node
 	public function getDatatype( /* List */ )
 	{
 		$args = func_get_args();
-		if( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
-		if( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
+		if ( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
+		if ( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
 
 		$l = $this->all( $args );
-		if( sizeof( $l ) == 0 ) { return; }
+		if ( sizeof( $l ) == 0 ) { return; }
 		return $l[0]->datatype();
 	}
 	public function getLanguage( /* List */ )
 	{
 		$args = func_get_args();
-		if( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
-		if( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
+		if ( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
+		if ( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
 
 		$l = $this->all( $args );
-		if( sizeof( $l ) == 0 ) { return; }
+		if ( sizeof( $l ) == 0 ) { return; }
 		return $l[0]->language();
 	}
 
 	public function allString( /* List */ )
 	{
 		$args = func_get_args();
-		if( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
-		if( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
+		if ( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
+		if ( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
 
 		$l = array();
 		foreach( $this->all( $args ) as $item )
@@ -69,13 +69,13 @@ class Graphite_Resource extends Graphite_Node
 	public function has(  /* List */ )
 	{
 		$args = func_get_args();
-		if( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
-		if( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
+		if ( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
+		if ( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
 
 		foreach( $args as $arg )
 		{
 			list( $set, $relation_uri ) = $this->parsePropertyArg( $arg );
-			if( isset($this->g->t[$set][$this->uri])
+			if ( isset($this->g->t[$set][$this->uri])
 			 && isset($this->g->t[$set][$this->uri][$relation_uri]) )
 			{
 				return true;
@@ -92,14 +92,14 @@ class Graphite_Resource extends Graphite_Node
 			return new Graphite_ResourceList($this->g, array());
 		}
 
-		if( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
-		if( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
+		if ( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
+		if ( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
 		$l = array();
 		$done = array();
 		foreach( $args as $arg )
 		{
 			list( $set, $relation_uri ) = $this->parsePropertyArg( $arg );
-			if( !isset($this->g->t[$set][$this->uri])
+			if ( !isset($this->g->t[$set][$this->uri])
 			 || !isset($this->g->t[$set][$this->uri][$relation_uri]) )
 			{
 				continue;
@@ -107,11 +107,11 @@ class Graphite_Resource extends Graphite_Node
 
 			foreach( $this->g->t[$set][$this->uri][$relation_uri] as $v )
 			{
-				if( is_array( $v ) )
+				if ( is_array( $v ) )
 				{
 					$l []= new Graphite_Literal( $this->g, $v );
 				}
-				else if( !isset($done[$v]) )
+				else if ( !isset($done[$v]) )
 				{
 					$l []= new Graphite_Resource( $this->g, $v );
 					$done[$v] = 1;
@@ -124,14 +124,14 @@ class Graphite_Resource extends Graphite_Node
 	public function relations()
 	{
 		$r = array();
-		if( isset( $this->g->t["sp"][$this->uri] ) )
+		if ( isset( $this->g->t["sp"][$this->uri] ) )
 		{
 			foreach( array_keys( $this->g->t["sp"][$this->uri] ) as $pred )
 			{
 				$r []= new Graphite_Relation( $this->g, $pred );
 			}
 		}
-		if( isset( $this->g->t["op"][$this->uri] ) )
+		if ( isset( $this->g->t["op"][$this->uri] ) )
 		{
 			foreach( array_keys( $this->g->t["op"][$this->uri] ) as $pred )
 			{
@@ -149,7 +149,7 @@ class Graphite_Resource extends Graphite_Node
 
 		$s = $this->uri;
 		$s_type = "uri";
-		if( preg_match( '/^_:/', $s ) )
+		if ( preg_match( '/^_:/', $s ) )
 		{
 			$s_type = "bnode";
 		}
@@ -160,7 +160,7 @@ class Graphite_Resource extends Graphite_Node
 			{
 				$p = $this->g->expandURI( $p );
 				$p_type = "uri";
-				if( preg_match( '/^_:/', $p ) )
+				if ( preg_match( '/^_:/', $p ) )
 				{
 					$p_type = "bnode";
 				}
@@ -169,14 +169,14 @@ class Graphite_Resource extends Graphite_Node
 				{
 					$o_lang = null;
 					$o_datatype = null;
-					if( is_array( $o ))
+					if ( is_array( $o ))
 					{
 						$o_type = "literal";
-						if( isset( $o["l"] ) && $o["l"] )
+						if ( isset( $o["l"] ) && $o["l"] )
 						{
 							$o_lang = $o["l"];
 						}
-						if( isset( $o["d"] ) )
+						if ( isset( $o["d"] ) )
 						{
 							$o_datatype = $this->g->expandURI( $o["d"] );
 						}
@@ -186,7 +186,7 @@ class Graphite_Resource extends Graphite_Node
 					{
 						$o = $this->g->expandURI( $o );
 						$o_type = "uri";
-						if( preg_match( '/^_:/', $o ) )
+						if ( preg_match( '/^_:/', $o ) )
 						{
 							$o_type = "bnode";
 							$bnodes_to_add[] = $o;
@@ -208,7 +208,7 @@ class Graphite_Resource extends Graphite_Node
 			}
 		}
 
-		if( $bnodes )
+		if ( $bnodes )
 		{
 			foreach( array_unique( $bnodes_to_add ) as $bnode )
 			{
@@ -252,7 +252,7 @@ class Graphite_Resource extends Graphite_Node
 		$cnt = 0;
 		foreach( $this->all( "owl:sameAs" ) as $sameas )
 		{
-			if( $prefix && substr( (string)$sameas, 0, strlen($prefix )) != $prefix )
+			if ( $prefix && substr( (string)$sameas, 0, strlen($prefix )) != $prefix )
 			{
 				continue;
 			}
@@ -278,8 +278,8 @@ class Graphite_Resource extends Graphite_Node
 			return false;
 		}
 
-		if( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
-		if( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
+		if ( isset($args[0]) && $args[0] instanceof Graphite_ResourceList ) { $args = $args[0]; }
+		if ( isset($args[0]) && is_array( $args[0] ) ) { $args = func_get_arg( 0 ); }
 
 		foreach( $this->allString( 'rdf:type' ) as $type )
 		{
@@ -287,7 +287,7 @@ class Graphite_Resource extends Graphite_Node
 			foreach( $args as $arg )
 			{
 				$uri = $this->g->expandURI( $arg );
-				if( $uri == $type ) { return true; }
+				if ( $uri == $type ) { return true; }
 			}
 		}
 
@@ -304,14 +304,14 @@ class Graphite_Resource extends Graphite_Node
 		# find the first label which is in the preferred language 
 		foreach( $labels as $label )
 		{
-			if( !is_a( $label, "Graphite_Literal" ) ) { continue; }
-			if( $label->language() == $this->g->lang ) { return $label; }
+			if ( !is_a( $label, "Graphite_Literal" ) ) { continue; }
+			if ( $label->language() == $this->g->lang ) { return $label; }
 		}
 		# ... or just return the first label if non match the prefered 
 		# language.
 		foreach( $labels as $label )
 		{
-			if( !is_a( $label, "Graphite_Literal" ) ) { continue; }
+			if ( !is_a( $label, "Graphite_Literal" ) ) { continue; }
 			return $label;
 		}
 		# If no results were literals, return a NULL 
@@ -324,13 +324,13 @@ class Graphite_Resource extends Graphite_Node
 	}
 	public function prettyLink()
 	{
-		if( substr( $this->uri, 0, 4 ) == "tel:" )
+		if ( substr( $this->uri, 0, 4 ) == "tel:" )
 		{
 			$label = substr( $this->uri, 4 );
-			if( $this->hasLabel() ) { $label = $this->label(); }
+			if ( $this->hasLabel() ) { $label = $this->label(); }
 			$icon = "";
 			$iconURL = $this->g->telIcon();
-			if( $iconURL != "" );
+			if ( $iconURL != "" );
 			{
 				$icon =
 "<a title='".$this->uri."' href='".$this->uri."'><img style='padding-right:0.2em;' src='$iconURL' /></a>";
@@ -341,13 +341,13 @@ class Graphite_Resource extends Graphite_Node
 			# icon adapted from cc-by icon at http://pc.de/icons/
 		}
 
-		if( substr( $this->uri, 0, 7 ) == "mailto:" )
+		if ( substr( $this->uri, 0, 7 ) == "mailto:" )
 		{
 			$label = substr( $this->uri, 7 );
-			if( $this->hasLabel() ) { $label = $this->label(); }
+			if ( $this->hasLabel() ) { $label = $this->label(); }
 			$icon = "";
 			$iconURL = $this->g->mailtoIcon();
-			if( $iconURL != "" );
+			if ( $iconURL != "" );
 			{
 				$icon =
 "<a title='".$this->uri."' href='".$this->uri."'><img style='padding-right:0.2em;' src='$iconURL' /></a>";
@@ -358,7 +358,7 @@ class Graphite_Resource extends Graphite_Node
 		}
 
 		$label = $this->uri;
-		if( $this->hasLabel() ) { $label = $this->label(); }
+		if ( $this->hasLabel() ) { $label = $this->label(); }
 		return "<a title='".$this->uri."' href='".$this->uri."'>$label</a>";
 	}
 
@@ -374,7 +374,7 @@ class Graphite_Resource extends Graphite_Node
 				$olist []= $obj->dumpValueText();
 			}
 			$arr = "->";
-			if( is_a( $prop, "Graphite_InverseRelation" ) ) { $arr = "<-"; }
+			if ( is_a( $prop, "Graphite_InverseRelation" ) ) { $arr = "<-"; }
 			$plist []= "$arr ".$this->g->shrinkURI($prop)." $arr ".join( ", ",$olist );
 		}
 		return $this->g->shrinkURI($this->uri)."\n    ".join( ";\n    ", $plist )." .\n";
@@ -392,7 +392,7 @@ class Graphite_Resource extends Graphite_Node
 			{
 				$olist []= $obj->dumpValue($options);
 			}
-			if( is_a( $prop, "Graphite_InverseRelation" ) )
+			if ( is_a( $prop, "Graphite_InverseRelation" ) )
 			{
 				$pattern = "<span style='font-size:130%%'>&larr;</span> is <a title='%s' href='%s' style='text-decoration:none;color: green'>%s</a> of <span style='font-size:130%%'>&larr;</span> %s";
 			}
@@ -404,13 +404,13 @@ class Graphite_Resource extends Graphite_Node
 			$plist []= sprintf( $pattern, htmlentities($prop), htmlentities($prop), htmlentities($this->g->shrinkURI($prop)), join( ", ",$olist ));
 		}
 		$r.= "\n<a name='".htmlentities($this->uri)."'></a><div style='text-align:left;font-family: arial;padding:0.5em; background-color:lightgrey;border:dashed 1px grey;margin-bottom:2px;'>\n";
-		if( isset($options["label"] ) )
+		if ( isset($options["label"] ) )
 		{
 			$label = $this->label();
-			if( $label == "[NULL]" ) { $label = ""; } else { $label = "<strong>".htmlentities($label)."</strong>"; }
-			if( $this->has( "rdf:type" ) )
+			if ( $label == "[NULL]" ) { $label = ""; } else { $label = "<strong>".htmlentities($label)."</strong>"; }
+			if ( $this->has( "rdf:type" ) )
 			{
-				if( $this->get( "rdf:type" )->hasLabel() )
+				if ( $this->get( "rdf:type" )->hasLabel() )
 				{
 					$typename = $this->get( "rdf:type" )->label();
 				}
@@ -422,7 +422,7 @@ class Graphite_Resource extends Graphite_Node
 				}
 				$r .= preg_replace( "/>a ([AEIOU])/i", ">an $1", "<div style='float:right'>a ".htmlentities($typename)."</div>" );
 			}
-			if( $label != "" ) { $r.="<div>$label</div>"; }
+			if ( $label != "" ) { $r.="<div>$label</div>"; }
 		}
 		$r.= " <!-- DUMP:".$this->uri." -->\n ";
 		$r.= "<div><a title='".htmlentities($this->uri)."' href='".htmlentities($this->uri)."' style='text-decoration:none'>".htmlentities($this->g->shrinkURI($this->uri))."</a></div>\n";
@@ -437,12 +437,12 @@ class Graphite_Resource extends Graphite_Node
 	function dumpValue($options=array())
 	{
 		$label = $this->dumpValueText();
-		if( $this->hasLabel() && @$options["labeluris"] )
+		if ( $this->hasLabel() && @$options["labeluris"] )
 		{
 			$label = $this->label();
 		}
 		$href = $this->uri;
-		if( @$options["internallinks"] )
+		if ( @$options["internallinks"] )
 		{
 			$href = "#".htmlentities($this->uri);
 		}
@@ -458,9 +458,9 @@ class Graphite_Resource extends Graphite_Node
 
 	protected function parsePropertyArg( $arg )
 	{
-		if( is_a( $arg, "Graphite_Resource" ) )
+		if ( is_a( $arg, "Graphite_Resource" ) )
 		{
-			if( is_a( $arg, "Graphite_InverseRelation" ) )
+			if ( is_a( $arg, "Graphite_InverseRelation" ) )
 			{
 				return array( "op", (string)$arg );
 			}
@@ -468,7 +468,7 @@ class Graphite_Resource extends Graphite_Node
 		}
 
 		$set = "sp";
-		if( substr( $arg,0,1) == "-" )
+		if ( substr( $arg,0,1) == "-" )
 		{
 			$set = "op";
 			$arg = substr($arg,1);

@@ -26,11 +26,11 @@ class Graphite_Literal extends Graphite_Node
 	function dumpValueText()
 	{
 		$r = '"'.$this->v.'"';
-		if( isset($this->triple["l"]) && $this->triple["l"])
+		if ( isset($this->triple["l"]) && $this->triple["l"])
 		{
 			$r.="@".$this->triple["l"];
 		}
-		if( isset($this->triple["d"]) )
+		if ( isset($this->triple["d"]) )
 		{
 			$r.="^^".$this->g->shrinkURI($this->triple["d"]);
 		}
@@ -47,11 +47,11 @@ class Graphite_Literal extends Graphite_Node
 		$v = preg_replace( "/  +/e", "\"<span class='special_char' style='font-size:70%'>\".str_repeat(\"␣\",strlen(\"$0\")).\"</span>\"", $v );
 		$r = '"'.$v.'"';
 
-		if( isset($this->triple["l"]) && $this->triple["l"])
+		if ( isset($this->triple["l"]) && $this->triple["l"])
 		{
 			$r.="@".$this->triple["l"];
 		}
-		if( isset($this->triple["d"]) )
+		if ( isset($this->triple["d"]) )
 		{
 			$r.="^^".$this->g->shrinkURI($this->triple["d"]);
 		}
@@ -60,7 +60,7 @@ class Graphite_Literal extends Graphite_Node
 
 	function nodeType()
 	{
-		if( isset($this->triple["d"]) )
+		if ( isset($this->triple["d"]) )
 		{
 			return $this->triple["d"];
 		}
